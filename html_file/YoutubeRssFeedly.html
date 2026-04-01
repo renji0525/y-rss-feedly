@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="resource/icon/favicon.png">
+    <title>YouTube RSS Reader</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-theme="dark">
+
+<aside>
+    <div class="sidebar-top">
+        <div class="section-title">登録チャンネル</div>
+        <div id="channel-list"></div>
+    </div>
+    <div class="sidebar-bottom">
+        <input type="text" id="apiKeyInput" class="input-bar" placeholder="apikey...">
+        <button class="btn-utility" onclick="exportJSON()">📊 バックアップ(JSON)</button>
+        <button class="btn-utility" onclick="document.getElementById('importFile').click()">📂 データを復元</button>
+        <input type="file" id="importFile" style="display:none" accept=".json" onchange="importJSON(event)">
+        <button class="btn-utility" onclick="toggleTheme()">🌓 ダークモード切替</button>
+        <button class="btn-danger" onclick="resetAll()">🗑️ ストレージ破棄</button>
+    </div>
+</aside>
+
+<main>
+    <header>
+        <input type="text" id="channelIdInput" class="input-bar" placeholder="YouTube Channel ID (例: UC...)">
+        <button class="btn-add" onclick="addNewChannel()">追加</button>
+        <button class="btn-utility" onclick="refreshAll()">🔄 更新</button>
+        <button class="btn-utility" onclick="markAllWatched()">✔️ すべて既読にする</button>
+    </header>
+    <div id="video-container"></div>
+</main>
+
+<script src="js/main.js"></script>
+</body>
+</html>
