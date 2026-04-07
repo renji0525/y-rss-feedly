@@ -1,15 +1,20 @@
+/* ==========================================================================
+   1. デザインシステム（変数定義）
+   ========================================================================== */
 :root {
-    --bg-color: #0f0f0f;
-    --sidebar-bg: #121212;
-    --card-bg: #1e1e1e;
-    --text-color: #ffffff;
-    --text-secondary: #aaaaaa;
-    --border-color: #2a2a2a;
-    --accent-color: #f04b4b;
-    --hover-bg: #2a2a2a;
-    --watched-opacity: 0.25;
+    /* ダークモード（デフォルト）のカラーパレット */
+    --bg-color: #0f0f0f;         /* 全体の背景色 */
+    --sidebar-bg: #121212;      /* サイドバーの背景色 */
+    --card-bg: #1e1e1e;         /* カード要素の背景色 */
+    --text-color: #ffffff;      /* メインの文字色 */
+    --text-secondary: #aaaaaa;  /* 補助的な情報の文字色（投稿者名など） */
+    --border-color: #2a2a2a;    /* 境界線や枠線の色 */
+    --accent-color: #f04b4b;    /* 強調色（追加ボタンなど） */
+    --hover-bg: #2a2a2a;        /* ホバー時の背景色 */
+    --watched-opacity: 0.25;    /* 視聴済みビデオの透明度 */
 }
 
+/* ライトモード設定：HTML要素に [data-theme="light"] が付与された際に変数を上書き */
 [data-theme="light"] {
     --bg-color: #f9f9f9;
     --sidebar-bg: #ffffff;
@@ -20,37 +25,45 @@
     --hover-bg: #f2f2f2;
 }
 
+/* ==========================================================================
+   2. ベースレイアウト
+   ========================================================================== */
 body {
     font-family: "Roboto", Arial, sans-serif;
     margin: 0;
-    display: flex;
-    height: 100vh;
+    display: flex;             /* サイドバーとメインを横並びにする */
+    height: 100vh;             /* 画面全体の高さに固定 */
     background-color: var(--bg-color);
     color: var(--text-color);
-    transition: background-color 0.2s;
-    overflow: hidden;
+    transition: background-color 0.2s; /* テーマ切り替えを滑らかに */
+    overflow: hidden;          /* ブラウザ全体のスクロールを禁止 */
 }
 
-/* --- Sidebar --- */
+/* ==========================================================================
+   3. サイドバー (Aside)
+   ========================================================================== */
 aside {
     width: 260px;
     min-width: 260px;
     background-color: var(--sidebar-bg);
     border-right: 1px solid var(--border-color);
     display: flex;
-    flex-direction: column;
+    flex-direction: column;    /* 上部リストと下部ボタンを縦に並べる */
     padding: 12px;
 }
 
+/* チャンネルリスト部分：溢れたらスクロール可能に */
 .sidebar-top { flex-grow: 1; overflow-y: auto; }
 
+/* セクションの見出し（「登録チャンネル」など） */
 .section-title {
     font-size: 12px;
     color: var(--text-secondary);
     padding: 8px 12px;
-    text-transform: uppercase;
+    text-transform: uppercase; /* 英字を大文字に強制 */
 }
 
+/* 各チャンネル項目の外枠 */
 .channel-item-container {
     display: flex;
     align-items: center;
@@ -64,6 +77,7 @@ aside {
 .channel-item-container:hover { background-color: var(--hover-bg); }
 .channel-item-container.active { background-color: var(--hover-bg); font-weight: bold; }
 
+/* チャンネル名リンク */
 .channel-link {
     display: flex;
     align-items: center;
@@ -71,14 +85,16 @@ aside {
     cursor: pointer;
     flex-grow: 1;
     font-size: 14px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap;      /* 改行させない */
+    overflow: hidden;         /* はみ出しを隠す */
+    text-overflow: ellipsis;  /* 長い名前は「...」にする */
 }
 
+/* 擬似要素でアイコンを付与（HTMLを汚さない手法） */
 .channel-link::before { content: "📺"; margin-right: 10px; font-size: 14px; }
 .all-view .channel-link::before { content: "🌐"; }
 
+/* チャンネル削除ボタン（通常は透明、親要素ホバーで表示） */
 .btn-delete-ch {
     width: 24px;
     height: 24px;
@@ -95,6 +111,7 @@ aside {
 .channel-item-container:hover .btn-delete-ch { opacity: 1; }
 .btn-delete-ch:hover { background-color: rgba(255,255,255,0.1); color: #ff4444; }
 
+/* サイドバー下部のユーティリティ（設定など） */
 .sidebar-bottom {
     margin-top: 10px;
     padding-top: 10px;
@@ -104,7 +121,9 @@ aside {
     gap: 6px;
 }
 
-/* --- Main Content --- */
+/* ==========================================================================
+   4. メインコンテンツ & ヘッダー
+   ========================================================================== */
 main { flex-grow: 1; display: flex; flex-direction: column; overflow: hidden; }
 
 header {
@@ -116,6 +135,7 @@ header {
     align-items: center;
 }
 
+/* 検索バー（YouTube風のデザイン） */
 .input-bar {
     flex-grow: 1;
     padding: 8px 16px;
@@ -127,7 +147,7 @@ header {
 }
 [data-theme="light"] .input-bar { background: #fff; color: #000; }
 
-/* --- Buttons --- */
+/* 共通ボタンスタイル */
 button {
     cursor: pointer;
     padding: 8px 16px;
@@ -140,33 +160,62 @@ button {
     gap: 6px;
     transition: transform 0.1s;
 }
-button:active { transform: scale(0.95); }
+button:active { transform: scale(0.95); } /* クリックした瞬間の沈み込み演出 */
+
 .btn-add { background-color: var(--accent-color); color: white; }
 .btn-utility { background-color: var(--hover-bg); color: var(--text-color); }
 .btn-danger { color: #ff4444; background-color: transparent; font-size: 12px; margin-top: 5px; }
 
-/* --- Video Grid --- */
+/* ==========================================================================
+   5. ビデオグリッドレイアウト
+   ========================================================================== */
 #video-container {
     padding: 24px;
-    overflow-y: auto;
+    overflow-y: auto;          /* コンテンツが増えたらここがスクロールする */
     display: grid;
+    /* レスポンシブ：最小320pxのカードを、画面幅に合わせて自動で敷き詰める */
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 24px 16px;
 }
 
+/* ビデオカード個別 */
 .video-card { display: flex; flex-direction: column; gap: 10px; transition: opacity 0.3s; }
-.video-card.watched { opacity: var(--watched-opacity); }
-.thumb-wrapper { width: 100%; position: relative; border-radius: 12px; overflow: hidden; aspect-ratio: 16 / 9; background-color: #222; }
+.video-card.watched { opacity: var(--watched-opacity); } /* 視聴済みは薄くする */
+
+/* サムネイルの親要素（アスペクト比維持） */
+.thumb-wrapper { 
+    width: 100%; 
+    position: relative; 
+    border-radius: 12px; 
+    overflow: hidden; 
+    aspect-ratio: 16 / 9; /* モダンなアスペクト比固定法 */
+    background-color: #222; 
+}
 .thumb-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.video-title { font-size: 15px; font-weight: 600; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.8em; }
+
+/* 動画タイトル：2行を超えると「...」で省略 */
+.video-title { 
+    font-size: 15px; 
+    font-weight: 600; 
+    line-height: 1.4; 
+    display: -webkit-box; 
+    -webkit-line-clamp: 2; 
+    -webkit-box-orient: vertical; 
+    overflow: hidden; 
+    height: 2.8em; 
+}
+
 .channel-name { font-size: 13px; color: var(--text-secondary); }
 .meta-row { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; font-size: 12px; color: var(--text-secondary); }
 
-/* Notifications */
+/* ==========================================================================
+   6. UI演出（アニメーション & スクロールバー）
+   ========================================================================== */
+/* 右からスライドイン/アウトする通知用のアニメーション定義 */
 @keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(100%); opacity: 0; } }
 
-/* Scrollbar */
+/* Chrome/Safari系のカスタムスクロールバー（目立たないように細く暗い色に） */
 ::-webkit-scrollbar { width: 8px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #3e3e3e; border-radius: 10px; }
